@@ -11,6 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   views.rst
+   viewlets.rst
+   dexterity.rst
+   robot.rst
 
 
 Indices and tables
