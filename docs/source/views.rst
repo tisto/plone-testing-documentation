@@ -4,6 +4,8 @@ Views
 Test view registration
 ----------------------
 
+Test if view has been properly registered::
+
     def test_delete_view_registered(self):
         try:
             getMultiAdapter(
@@ -13,30 +15,35 @@ Test view registration
         except:
             self.fail("Delete view is not registered properly.")
 
+
 Test with getMultiAdapter
 -------------------------
 
-from zope.component import getMultiAdapter
+Test::
 
-def test_view_is_registered(self)
-    # Get view
-    view = getMultiAdapter((self.portal, self.portal.REQUEST), name="create-user")
-    # Put view to acquisition chain
-    view = view.__of__(self.portal)
-    # Call view
-    self.failUnless(view())
+    def test_view_is_registered(self):
+        # Get the view
+        view = getMultiAdapter((self.portal, self.portal.REQUEST), name="create-user")
+        # Put the view into the acquisition chain
+        view = view.__of__(self.portal)
+        # Call the view
+        self.failUnless(view())
 
 
 Test with restrictedTraverse
 ----------------------------
 
-def test_view_is_registered(self):
-    view = self.portal.restrictedTraverse('@@list-products')
-    self.failUnless(view)
-    self.assertEquals(view(), 'ListProductsView')
+Test::
+
+    def test_view_is_registered(self):
+        view = self.portal.restrictedTraverse('@@list-products')
+        self.failUnless(view)
+        self.assertEquals(view(), 'ListProductsView')
 
 Test view with parameter
 ------------------------
+
+Test::
 
     def test_autocomplete_tags_view_registered(self):
         self.request.set('term', 'foo')
@@ -45,32 +52,42 @@ Test view with parameter
         view = view.__of__(self.portal)
         self.failUnless(view())
 
+
 Test with restrictedTraverse and parameter
 ------------------------------------------
+
+Test::
 
     def test_view_with_restrictedTraverse_and_params(self):
         view = self.context.restrictedTraverse("comment-statistics-batch")
         view = view.__of__(self.context)
         view(query, base_number * i, base_number * (i + 1) - 1)
 
+
 Test if view is protected
 -------------------------
 
-def test_view_is_protected(self):
-    from AccessControl import Unauthorized
-    self.logout()
-    self.assertRaises(Unauthorized,
-                      self.portal.restrictedTraverse,
-                      '@@deploymentmanager')
+Test::
+
+    def test_view_is_protected(self):
+        from AccessControl import Unauthorized
+        self.logout()
+        self.assertRaises(Unauthorized,
+                          self.portal.restrictedTraverse,
+                          '@@deploymentmanager')
 
 Test if object exists in folder
 -------------------------------
 
-def test_object_in_folder(self):
-    self.failIf('yoda' in self.portal.objectIds())
+Test::
+
+    def test_object_in_folder(self):
+        self.failIf('yoda' in self.portal.objectIds())
 
 Test Redirect
 -------------
+
+Test::
 
     def test_component_view(self):
         self.portal.mi.sec.invokeFactory(
@@ -94,6 +111,8 @@ Test Redirect
 Test View HTML Output
 =====================
 
+Test::
+
     from lxml import html
     output = lxml.html.fromstring(view())
     self.assertEqual(len(output.xpath("/html/body/div")), 1)
@@ -102,7 +121,7 @@ Test View HTML Output
 Troubleshooting
 ===============
 
-KeyError: 'ACTUAL_URL'
+KeyError: 'ACTUAL_URL'::
 
     def setUp(self):
         self.portal = self.layer['portal']
@@ -113,30 +132,41 @@ KeyError: 'ACTUAL_URL'
         self.request.set('URL', self.folder.absolute_url())
         self.request.set('ACTUAL_URL', self.folder.absolute_url())
 
-
     def test_view(self):
         view = self.collection.restrictedTraverse('@@RSS')
         self.assertTrue(view())
         self.assertEquals(view.request.response.status, 200)
 
 
-ComponentLookupError: ((<PloneSite at /plone>, <HTTPRequest, URL=http://nohost/plone>), <InterfaceClass zope.interface.Interface>, 'recipes')
+ComponentLookupError
+--------------------
 
+If a view can not be looked up on a particular context, Plone will raise a
+ComponentLookupError (because views are multi-adapters), e.g.::
+
+    ComponentLookupError: ((<PloneSite at /plone>, <HTTPRequest, URL=http://nohost/plone>), <InterfaceClass zope.interface.Interface>, 'recipes')::
+
+This can be solved for instance by providing a browser layer that has been
+missing::
 
     def setUp(self):
-        self.portal = self.layer['portal']
         self.request = self.layer['request']
-        self.request.set('URL', self.portal.absolute_url())
-        self.request.set('ACTUAL_URL', self.portal.absolute_url())
         from zope.interface import directlyProvides
         directlyProvides(self.request, IJungzeelandiaContenttypes)
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        ...
+
+
+AttributeError: @@plone_portal_state
+------------------------------------
+
 
 
 Test View Methods
 =================
 
-def test_method_sections(self):
+Test::
+
+    def test_method_sections(self):
         self.portal.mi.invokeFactory("Section", id="s1", title="Section 1")
         self.portal.mi.invokeFactory("Section", id="s2", title="Section 2")
         view = getMultiAdapter(
@@ -151,7 +181,11 @@ def test_method_sections(self):
             [u'Section 1', u'Section 2']
         )
 
+
 View Status Messages
+--------------------
+
+Test::
 
     def test_delete_comments_sets_status_message(self):
         view = getMultiAdapter(
@@ -167,16 +201,16 @@ View Status Messages
             u'Item deleted'
         )
 
-View Class
+View Class::
 
-class DeleteComponent(BrowserView):
+    class DeleteComponent(BrowserView):
 
-    def __call__(self):
-        section = aq_parent(self.context)
-        section.manage_delObjects([self.context.id])
-        IStatusMessage(self.context.REQUEST).addStatusMessage(
-            _("Item deleted"),
-            type="info"
-        )
-        self.request.response.redirect(section.absolute_url())
+        def __call__(self):
+            section = aq_parent(self.context)
+            section.manage_delObjects([self.context.id])
+            IStatusMessage(self.context.REQUEST).addStatusMessage(
+                _("Item deleted"),
+                type="info"
+            )
+            self.request.response.redirect(section.absolute_url())
 
