@@ -11,6 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   generic-setup.py
    views.rst
    viewlets.rst
    dexterity.rst
