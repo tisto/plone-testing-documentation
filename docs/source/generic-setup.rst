@@ -336,7 +336,8 @@ setuphandlers.py
         membership_tool.setMemberareaCreationFlag()
         logger.info("Member area creation active\n")
 
-Workflows
+Workflow
+--------
 
     def test_workflows_installed(self):
         """Make sure both comment workflows have been installed properly.
@@ -352,6 +353,7 @@ Workflows
         self.assertEqual(('one_state_workflow',),
                           self.portal.portal_workflow.getChainForPortalType(
                               'Discussion Item'))
+
 
 Users and Groups
 

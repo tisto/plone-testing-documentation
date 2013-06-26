@@ -16,6 +16,7 @@ Contents:
    viewlets.rst
    dexterity.rst
    robot.rst
+   workflow.rst
 
 
 Indices and tables
