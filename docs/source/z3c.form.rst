@@ -36,7 +36,7 @@ from zope.publisher.browser import TestRequest
 from zope.annotation.interfaces import IAttributeAnnotatable
 from z3c.form.interfaces import IFormLayer
 from zope.component import getMultiAdapter
-from freitag.membership.views.memberprofile import MemberProfileEditForm
+from mycompany.membership.views.memberprofile import MemberProfileEditForm
 
 ...
 

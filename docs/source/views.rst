@@ -152,7 +152,7 @@ missing::
     def setUp(self):
         self.request = self.layer['request']
         from zope.interface import directlyProvides
-        directlyProvides(self.request, IJungzeelandiaContenttypes)
+        directlyProvides(self.request, IMyCompanyContenttypes)
         ...
 
 

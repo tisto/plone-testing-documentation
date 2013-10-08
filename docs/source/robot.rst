@@ -128,7 +128,7 @@ Scenario: Submitting a comment displays it in the page
     and i click the comment submit button
    Then the page shows the comment
 
-You can now run only the latter test: ./bin/test -m der.freitag -t working_on_it (This is Plone-specific. See Asko's comment below.)
+You can now run only the latter test: ./bin/test -m mycompany.package -t working_on_it (This is Plone-specific. See Asko's comment below.)
 
 
 ..note: http://keeshink.blogspot.de/2013/03/robot-framework-testing-hints.html

@@ -101,15 +101,15 @@ interfaces.py
 
 from zope.interface import Interface
 
-class IJungzeelandiaTheme(Interface):
+class IMyCompanyTheme(Interface):
     """"""
 
 browserlayer.xml
 
 <layers>
   <layer
-    name="jungzeelandia.theme"
-    interface="jungzeelandia.theme.interfaces.IJungzeelandiaTheme"
+    name="mycompany.theme"
+    interface="mycompany.theme.interfaces.IMyCompanyTheme"
     />
 </layers>
 
@@ -197,7 +197,7 @@ catalog.xml
 Catalog Metadata
 
     def test_catalog_metadata_installed(self):
-        self.portal.invokeFactory('freitag.article.article',
+        self.portal.invokeFactory('mycompany.article.article',
                                   'article')
         self.portal.article.catchword = "Foo"
         self.portal.article.reindexObject()
@@ -239,13 +239,13 @@ Hide content type from navigation
     def test_hide_types_form_navigation(self):
         navtree_properties = self.portal.portal_properties.navtree_properties
         self.assertTrue(navtree_properties.hasProperty('metaTypesNotToList'))
-        self.assertTrue('freitag.membership.emailresetter' in
+        self.assertTrue('mycompany.membership.emailresetter' in
             navtree_properties.metaTypesNotToList)
-        self.assertTrue('freitag.membership.member' in
+        self.assertTrue('mycompany.membership.member' in
             navtree_properties.metaTypesNotToList)
-        self.assertTrue('freitag.membership.passwordresetter' in
+        self.assertTrue('mycompany.membership.passwordresetter' in
             navtree_properties.metaTypesNotToList)
-        self.assertTrue('freitag.membership.registrator' in
+        self.assertTrue('mycompany.membership.registrator' in
             navtree_properties.metaTypesNotToList)
 
 profiles/default/propertiestool.xml
@@ -255,9 +255,9 @@ profiles/default/propertiestool.xml
  <object name="navtree_properties" meta_type="Plone Property Sheet">
   <property name="title">NavigationTree properties</property>
   <property name="metaTypesNotToList" type="lines">
-   <element value="freitag.membership.emailresetter"/>
-   <element value="freitag.membership.passwordresetter"/>
-   <element value="freitag.membership.registrator"/>
+   <element value="mycompany.membership.emailresetter"/>
+   <element value="mycompany.membership.passwordresetter"/>
+   <element value="mycompany.membership.registrator"/>
   </property>
  </object>
 </object>
@@ -267,11 +267,11 @@ Do not search content type
     def test_types_not_searched(self):
         types_not_searched = self.portal.portal_properties\
             .site_properties.types_not_searched
-        self.assertTrue('freitag.membership.emailresetter'
+        self.assertTrue('mycompany.membership.emailresetter'
                         in types_not_searched)
-        self.assertTrue('freitag.membership.passwordresetter'
+        self.assertTrue('mycompany.membership.passwordresetter'
                         in types_not_searched)
-        self.assertTrue('freitag.membership.registrator'
+        self.assertTrue('mycompany.membership.registrator'
                         in types_not_searched)
 
 profiles/default/propertiestool.xml
@@ -280,9 +280,9 @@ profiles/default/propertiestool.xml
 <object name="portal_properties">
   <object name="site_properties">
     <property name="types_not_searched" purge="false">
-      <element value="freitag.membership.emailresetter"/>
-      <element value="freitag.membership.passwordresetter"/>
-      <element value="freitag.membership.registrator"/>
+      <element value="mycompany.membership.emailresetter"/>
+      <element value="mycompany.membership.passwordresetter"/>
+      <element value="mycompany.membership.registrator"/>
     </property>
   </object>
 </object>
@@ -301,7 +301,7 @@ profiles/default/actions.xml
 <object name="portal_actions"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <object name="user">
-  <object name="preferences" meta_type="CMF Action" i18n:domain="freitag.membership">
+  <object name="preferences" meta_type="CMF Action" i18n:domain="mycompany.membership">
    <property name="title" i18n:translate="">Preferences</property>
    <property name="description" i18n:translate=""></property>
    <property
@@ -320,7 +320,7 @@ enable user folder
 
         self.mtool = self.portal.portal_membership
         self.assertEquals(self.mtool.memberareaCreationFlag, 1)
-        self.assertEquals(self.mtool.memberarea_type, 'freitag.membership.member')
+        self.assertEquals(self.mtool.memberarea_type, 'mycompany.membership.member')
         self.assertEquals(self.mtool.getMembersFolder().absolute_url(),
                           'http://nohost/plone/autoren')
 
@@ -387,7 +387,7 @@ Roles
 
 test_setup.py
 
-    def test_freitag_site_administrator_role_installed(self):
+    def test_mycompany_site_administrator_role_installed(self):
         self.assertTrue(
             "Freitag Site Administrator" in self.portal.valid_roles())
 

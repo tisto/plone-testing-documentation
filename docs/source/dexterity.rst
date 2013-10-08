@@ -12,29 +12,29 @@ class DepartmentIntegrationTest(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'test-folder')
         self.folder = self.portal['test-folder']
-        self.portal.invokeFactory('freitag.overview.overview', id="overview1")
+        self.portal.invokeFactory('mycompany.overview.overview', id="overview1")
         self.overview = self.portal.overview1
 
     def test_schema(self):
         fti = queryUtility(IDexterityFTI,
-                           name='freitag.overview.department')
+                           name='mycompany.overview.department')
         schema = fti.lookupSchema()
         self.assertEquals(IDepartment, schema)
 
     def test_fti(self):
         fti = queryUtility(IDexterityFTI,
-                           name='freitag.overview.department')
+                           name='mycompany.overview.department')
         self.assertNotEquals(None, fti)
 
     def test_factory(self):
         fti = queryUtility(IDexterityFTI,
-                           name='freitag.overview.department')
+                           name='mycompany.overview.department')
         factory = fti.factory
         new_object = createObject(factory)
         self.failUnless(IDepartment.providedBy(new_object))
 
     def test_adding(self):
-        self.overview.invokeFactory('freitag.overview.department',
+        self.overview.invokeFactory('mycompany.overview.department',
                                     'department1')
         department1 = self.overview['department1']
         self.failUnless(IDepartment.providedBy(department1))
@@ -42,7 +42,7 @@ class DepartmentIntegrationTest(unittest.TestCase):
     def test_global_adding_disallowed(self):
         self.assertRaises(ValueError,
                       self.folder.invokeFactory,
-                      'freitag.overview.department',
+                      'mycompany.overview.department',
                       'department1')
 
 
