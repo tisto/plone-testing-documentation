@@ -4,16 +4,17 @@ Views
 Test view registration
 ----------------------
 
-Test if view has been properly registered::
+Test if a view has been properly registered::
 
-    def test_delete_view_registered(self):
+    def test_view_is_registered(self):
         try:
             getMultiAdapter(
-                (self.portal.mi.se.tc, self.request),
-                name="delete"
+                (self.portal, self.request),
+                name="statistics"
             )
-        except:
-            self.fail("Delete view is not registered properly.")
+        except ComponentLookupError, error:
+            self.fail(
+                "The view seems not to be registered properly. %s" % error)
 
 
 Test with getMultiAdapter

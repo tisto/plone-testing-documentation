@@ -35,17 +35,30 @@ Test if a certain role ('External Editor') has a certain permission
             'External Editor role does not possess the "Request review" '
             'permission')
 
+
 Workflow installed
 ------------------
 
-    def test_workflows_installed(self):
+  def test_workflows_installed(self):
 
-        """Make sure both comment workflows have been installed properly."""
-        self.assertTrue(
-            ‘one_state_workflow’ in self.portal.portal_workflow.objectIds())
+      """Make sure both comment workflows have been installed properly."""
+      self.assertTrue(
+          ‘one_state_workflow’ in self.portal.portal_workflow.objectIds())
 
-        self.assertTrue(
-            ‘comment_review_workflow’ in self.portal.portal_workflow.objectIds())
+      self.assertTrue(
+          ‘comment_review_workflow’ in self.portal.portal_workflow.objectIds())
+
+
+profiles/default/workflows.xml::
+
+  <?xml version="1.0"?>
+  <object name="portal_workflow" meta_type="Plone Workflow Tool">
+    <object name="consulting_ticket_workflow" meta_type="Workflow"/>
+    <bindings>
+      <type type_id="ConsultingTicket">
+        <bound-workflow workflow_id="consulting_ticket_workflow"/>
+      </type>
+  </object>
 
 
 Default workflow

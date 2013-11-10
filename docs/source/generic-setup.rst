@@ -177,28 +177,38 @@ Test if code is run as test
     if self.request['URL'] == 'http://nohost':
         # test run
 
-Catalog
+Catalog Index
+-------------
 
-Catalog Indexes
+Test if catalog index 'total_comments' has been installed::
 
-    def test_catalog_indexes(self):
-        self.assertTrue('title' in self.portal.portal_catalog.indexes())
-        self.assertTrue('total_comments' in self.portal.portal_catalog.indexes())
+    def test_catalog_index_total_comments_installed(self):
+        catalog = getToolByName(self.portal, "portal_catalog")
+        self.assertTrue(
+            'total_comments' in
+            catalog.indexes()
+        )
 
-catalog.xml
+profiles/default/catalog.xml::
 
-<?xml version="1.0"?>
-<object name="portal_catalog" meta_type="Plone Catalog Tool">
-  <index name="autor_in" meta_type="FieldIndex">
-    <indexed_attr value="autor_in" />
-  </index>
-</object>
+    <?xml version="1.0"?>
+    <object name="portal_catalog">
+
+      <index name="total_comments" meta_type="FieldIndex">
+        <indexed_attr value="total_comments"/>
+      </index>
+
+    </object>
+
 
 Catalog Metadata
+----------------
+
+Test if catalog metadata has been installed::
 
     def test_catalog_metadata_installed(self):
-        self.portal.invokeFactory('mycompany.article.article',
-                                  'article')
+        self.portal.invokeFactory('Document',
+                                  'doc')
         self.portal.article.catchword = "Foo"
         self.portal.article.reindexObject()
         self.assertTrue('catchword' in self.catalog.schema())
@@ -207,18 +217,15 @@ Catalog Metadata
         self.assertTrue(len(result), 1)
         self.assertEquals(result[0].catchword, "Foo")
 
-catalog.xml
+profiles/default/catalog.xml::
 
-<?xml version="1.0"?>
-<object name="portal_catalog" meta_type="Plone Catalog Tool">
-i
- <index name="autor_in" meta_type="FieldIndex">
- <indexed_attr value="autor_in" />
- </index>
-
- <column value="autor_in" />
-
-</object>
+  <?xml version="1.0"?>
+  <object name="portal_catalog" meta_type="Plone Catalog Tool">
+    <index name="autor_in" meta_type="FieldIndex">
+      <indexed_attr value="autor_in" />
+    </index>
+   <column value="autor_in" />
+  </object>
 
 Searchable index
 
@@ -421,3 +428,49 @@ class EasyNewsletterTests(unittest.TestCase):
         self.assertTrue('To: john@plone.test' in msg)
         self.assertTrue('From: portal@plone.test' in msg)
 
+Versioning
+----------
+
+(Dexterity/plone.app.versioningbehavior only)
+
+profiles/default/types/MyCustomType.xml::
+
+    <property name="behaviors">
+      <element value="plone.app.versioningbehavior.behaviors.IVersionable" />
+    </property>
+
+Test::
+
+    def test_versioning_behavior_enabled(self):
+        self.portal.mi.sec.tc.invokeFactory('AudienceText', 'text1')
+        from plone.app.versioningbehavior.behaviors import IVersioningSupport
+        self.assertTrue(
+            IVersioningSupport.providedBy(self.portal.mi.sec.tc.text1)
+        )
+
+profiles/default/repositorytool.xml::
+
+  <?xml version="1.0"?>
+  <repositorytool>
+    <policymap>
+      <type name="MyCustomType">
+        <policy name="at_edit_autoversion"/>
+        <policy name="version_on_revert"/>
+      </type>
+    </policymap>
+  </repositorytool>
+
+Test::
+
+    def test_versioning_enabled(self):
+        self.portal.mi.sec.tc.invokeFactory('AudienceText', 'text1')
+        repository_tool = getToolByName(self.portal, "portal_repository")
+        self.assertTrue(
+            repository_tool.isVersionable(self.portal.mi.sec.tc.text1)
+        )
+        self.assertTrue(
+            repository_tool.supportsPolicy(
+                self.portal.mi.sec.tc.text1,
+                'at_edit_autoversion'
+            )
+        )

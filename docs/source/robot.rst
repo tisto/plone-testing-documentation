@@ -107,6 +107,68 @@ Select
 todo
 
 
+File
+----
+
+Before we can upload a file, we have to put a dummy file somewhere on the file
+system and make sure it can be looked up in the test. Because robot tests can not look up files in relative paths, we have to pass the buildout directory as a environment variable to the test. To do so we have to amend the
+```buildout.cfg```::
+
+  [environment]
+  BUILDOUT_DIR = ${buildout:directory}
+
+  [test]
+  recipe = zc.recipe.testrunner
+  ...
+  environment = environment
+
+In our robot test directory, we create a python file that reads the
+BUILDOUT_DIR variable from the environment and creates a PATH_TO_TEST_FILES variable from this ```tests/robot/variables.py```::
+
+  PATH_TO_TEST_FILES = os.environ.get('BUILDOUT_DIR', '') + \
+      '/src/plone.app.contenttypes/plone/app/contenttypes/tests'
+
+Now we can put a dummy file into our tests directory and look it up in our
+tests.
+
+In order to make the PATH_TO_TEST_FILES variable available we have to include
+the variables.py variables in our "Settings" part of our robot test file
+```tests/robot/test_example.robot```::
+
+  *** Settings ***
+
+  Variables  dkg/policy/tests/acceptance/variables.py
+
+  ...
+
+  *** Keywords ***
+
+  ...
+
+  a file '${title}'
+    Go to  ${PLONE_URL}/++add++File
+    Input Text  name=form.widgets.title  ${title}
+    Choose File  name=form.widgets.file  ${PATH_TO_TEST_FILES}/loremipsum.pdf
+    Click Button  Save
+    Wait until page contains  Item created
+    Page Should Contain  loremipsum.pdf
+
+
+Image
+-----
+
+Set up PATH_TO_TEST_FILES variable as described in the file section.
+
+tests/robot/test_example.robot::
+
+  an image '${title}'
+    Go to  ${PLONE_URL}/++add++Image
+    Input Text  name=form.widgets.title  ${title}
+    Choose File  name=form.widgets.image  ${PATH_TO_TEST_FILES}/logo.jpg
+    Click Button  Save
+    Wait until page contains  Item created
+
+
 Tags
 ----
 
@@ -132,3 +194,14 @@ You can now run only the latter test: ./bin/test -m mycompany.package -t working
 
 
 ..note: http://keeshink.blogspot.de/2013/03/robot-framework-testing-hints.html
+
+XPATH
+-----
+
+count(//td[text()='&nbsp;'])
+
+  <strong id="search-results-number">
+
+
+  Wait until keyword succeeds  10s  1s  XPath Should Match X Times  //strong[@id='search-results-number' and contains(.,'1')]  ${result_count}
+
