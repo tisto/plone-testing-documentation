@@ -3,7 +3,7 @@ Dexterity
 
 class DepartmentIntegrationTest(unittest.TestCase):
 
-    layer = FREITAG_OVERVIEW_INTEGRATION_TESTING
+    layer = MYCOMPANY_OVERVIEW_INTEGRATION_TESTING
 
     def setUp(self):
         self.portal = self.layer['portal']
