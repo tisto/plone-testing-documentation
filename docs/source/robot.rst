@@ -111,25 +111,13 @@ File
 ----
 
 Before we can upload a file, we have to put a dummy file somewhere on the file
-system and make sure it can be looked up in the test. Because robot tests can not look up files in relative paths, we have to pass the buildout directory as a environment variable to the test. To do so we have to amend the
-```buildout.cfg```::
+system and make sure it can be looked up in the test. Because robot tests can not look up files in relative paths, we have to pass the buildout directory as variable to the test. To do so we create a variables.py file in the tests
+directory (tests/variables.py)::
 
-  [environment]
-  BUILDOUT_DIR = ${buildout:directory}
-
-  [test]
-  recipe = zc.recipe.testrunner
-  ...
-  environment = environment
-
-In our robot test directory, we create a python file that reads the
-BUILDOUT_DIR variable from the environment and creates a PATH_TO_TEST_FILES variable from this ```tests/robot/variables.py```::
+  import os
 
   PATH_TO_TEST_FILES = os.environ.get('BUILDOUT_DIR', '') + \
-      '/src/plone.app.contenttypes/plone/app/contenttypes/tests'
-
-Now we can put a dummy file into our tests directory and look it up in our
-tests.
+      '/src/collective.themetest/src/collective/themetest/tests/data'
 
 In order to make the PATH_TO_TEST_FILES variable available we have to include
 the variables.py variables in our "Settings" part of our robot test file
@@ -137,7 +125,7 @@ the variables.py variables in our "Settings" part of our robot test file
 
   *** Settings ***
 
-  Variables  dkg/policy/tests/acceptance/variables.py
+  Variables  collective/themetest/tests/variables.py
 
   ...
 
