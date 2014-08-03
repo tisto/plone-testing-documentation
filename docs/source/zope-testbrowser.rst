@@ -73,7 +73,15 @@ Test::
 Select
 ------
 
-todo
+HTML::
+
+ ...
+
+Test::
+
+  self.browser.getControl(
+    'Site language'
+  ).value = ['de']
 
 
 Links
