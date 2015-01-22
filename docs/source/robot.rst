@@ -116,8 +116,8 @@ directory (tests/variables.py)::
 
   import os
 
-  PATH_TO_TEST_FILES = os.environ.get('BUILDOUT_DIR', '') + \
-      '/src/collective.themetest/src/collective/themetest/tests/data'
+  PATH_TO_TEST_FILES = os.path.join(os.path.dirname(__file__), 'data')
+
 
 In order to make the PATH_TO_TEST_FILES variable available we have to include
 the variables.py variables in our "Settings" part of our robot test file
